@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>PantryFlow - Gestión Productos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="h-screen overflow-hidden bg-zinc-950 text-zinc-200">
+
+  <!-- CABECERA FULL WIDTH -->
+  <div class="w-full bg-gradient-to-r from-emerald-900/40 via-zinc-900 to-emerald-900/40 
+              backdrop-blur-xl border-b border-emerald-500/20 
+              shadow-[0_0_80px_rgba(16,185,129,0.15)] py-6 px-10">
+
+    <div class="flex justify-between items-center max-w-6xl mx-auto">
+      <h1 class="text-2xl tracking-[0.3em] text-emerald-400 font-semibold">
+        GESTIÓN DE PRODUCTOS
+      </h1>
+
+      <a href="index.html"
+         class="text-sm text-zinc-400 hover:text-emerald-400 transition">
+        ← Volver
+      </a>
+    </div>
+
+  </div>
+
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="max-w-6xl mx-auto h-[calc(100vh-96px)] flex flex-col px-10 py-8">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 flex-grow">
+
+      <!-- FORMULARIO -->
+      <div class="space-y-5">
+
+        <input type="text" placeholder="Buscar producto..."
+          class="w-full px-4 py-3 rounded-xl bg-white/5 backdrop-blur-md 
+                 border border-white/10 focus:border-emerald-400/50
+                 focus:ring-2 focus:ring-emerald-500/30 transition" />
+
+        <input type="text" placeholder="Nombre"
+          class="w-full px-4 py-3 rounded-xl bg-white/5 backdrop-blur-md 
+                 border border-white/10 focus:border-emerald-400/50
+                 focus:ring-2 focus:ring-emerald-500/30 transition" />
+
+        <input type="text" placeholder="Código de barras"
+          class="w-full px-4 py-3 rounded-xl bg-white/5 backdrop-blur-md 
+                 border border-white/10 focus:border-emerald-400/50
+                 focus:ring-2 focus:ring-emerald-500/30 transition" />
+
+        <select
+          class="w-full px-4 py-3 rounded-xl bg-white/5 backdrop-blur-md 
+                 border border-white/10 focus:border-emerald-400/50
+                 focus:ring-2 focus:ring-emerald-500/30 transition">
+          <option>Categoría</option>
+          <option>fresco</option>
+          <option>seco</option>
+          <option>refrigerado</option>
+        </select>
+
+        <select
+          class="w-full px-4 py-3 rounded-xl bg-white/5 backdrop-blur-md 
+                 border border-white/10 focus:border-emerald-400/50
+                 focus:ring-2 focus:ring-emerald-500/30 transition">
+          <option>Unidad</option>
+          <option>g</option>
+          <option>ml</option>
+          <option>unit</option>
+        </select>
+
+      </div>
+
+      <!-- IMAGEN + BOTONES -->
+      <div class="flex flex-col items-center justify-start space-y-8">
+
+        <div class="w-64 h-64 rounded-2xl border border-emerald-500/20
+                    bg-white/5 backdrop-blur-lg flex items-center justify-center
+                    text-zinc-500 text-sm
+                    shadow-[0_0_60px_rgba(16,185,129,0.1)]">
+          Imagen producto<br>250 x 250
+        </div>
+
+        <div class="w-full flex gap-6">
+
+          <button
+            class="flex-1 py-4 rounded-lg bg-emerald-500/80 hover:bg-emerald-400
+                   text-black font-semibold transition-all duration-300
+                   hover:scale-105 shadow-lg">
+            GUARDAR
+          </button>
+
+          <button
+            class="flex-1 py-4 rounded-lg bg-red-500/70 hover:bg-red-400
+                   text-black font-semibold transition-all duration-300
+                   hover:scale-105 shadow-lg">
+            ELIMINAR
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- LISTA PRODUCTOS -->
+    <div class="mt-10 flex-grow flex flex-col">
+
+      <!-- Cabecera tabla -->
+      <div class="grid grid-cols-3 text-xs uppercase tracking-widest text-emerald-400 pb-3 border-b border-white/10">
+        <div>Nombre</div>
+        <div>Categoría</div>
+        <div class="text-right">Unidad</div>
+      </div>
+
+      <!-- Contenedor scroll único -->
+      <div class="flex-grow overflow-y-auto mt-4 space-y-3 pr-2">
+
+        <div class="grid grid-cols-3 bg-white/5 backdrop-blur-md 
+                    px-4 py-3 rounded-xl border border-white/10">
+          <div>POLLO</div>
+          <div class="text-zinc-400">fresco</div>
+          <div class="text-right text-emerald-400">g</div>
+        </div>
+
+        <div class="grid grid-cols-3 bg-white/5 backdrop-blur-md 
+                    px-4 py-3 rounded-xl border border-white/10">
+          <div>ARROZ</div>
+          <div class="text-zinc-400">seco</div>
+          <div class="text-right text-emerald-400">g</div>
+        </div>
+
+        <div class="grid grid-cols-3 bg-white/5 backdrop-blur-md 
+                    px-4 py-3 rounded-xl border border-white/10">
+          <div>HUEVOS</div>
+          <div class="text-zinc-400">refrigerado</div>
+          <div class="text-right text-emerald-400">unit</div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>
