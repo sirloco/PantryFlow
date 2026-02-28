@@ -10,30 +10,50 @@ async function cargarInventario() {
     return;
   }
 
-  const contenedor = document.createElement("div");
-  contenedor.className = "max-w-2xl mx-auto mt-10 space-y-4";
+  const contenedor = document.getElementById("stock-container");
+  contenedor.innerHTML = "";
 
   data.forEach(producto => {
 
     const card = document.createElement("div");
-    card.className = "bg-white shadow-md rounded-xl p-5 border border-gray-200";
+    card.className = `
+      bg-white/5 backdrop-blur-md
+      px-6 py-4 rounded-xl
+      border border-white/10
+      shadow-[2px_2px_6px_rgba(0,167,42,0.6)]
+      transition-all duration-200
+      hover:shadow-[4px_4px_10px_rgba(0,167,42,0.8)]
+    `;
 
     card.innerHTML = `
       <div class="flex justify-between items-center">
-        <h2 class="text-lg font-semibold text-gray-800">
+        <h3 class="text-lg font-semibold tracking-wide">
           ${producto.nombre}
-        </h2>
-        <span class="text-sm font-bold px-3 py-1 rounded-full bg-blue-100 text-blue-700">
-          Stock: ${producto.stock}
+        </h3>
+        <span class="text-sm font-bold px-3 py-1 rounded-full
+                     bg-emerald-500/20 text-emerald-400">
+          ${producto.stock}
         </span>
       </div>
     `;
 
     contenedor.appendChild(card);
 
+    
+    
+  });
+    const titulo = document.getElementById("tituloMovimiento");
+
+  btnEntrada.addEventListener("click", () => {
+  titulo.classList.remove("text-red-400");
+  titulo.classList.add("text-emerald-400");
   });
 
-  document.body.appendChild(contenedor);
+  btnSalida.addEventListener("click", () => {
+  titulo.classList.remove("text-emerald-400");
+  titulo.classList.add("text-red-400");
+  });
+
 }
 
 cargarInventario();
