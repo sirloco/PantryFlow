@@ -4,64 +4,87 @@
   <meta charset="UTF-8">
   <title>PantryFlow</title>
   <script src="https://cdn.tailwindcss.com"></script>
-<style>
-  @keyframes fadeInSoft {
-    from {
-      opacity: 0;
-      transform: translateY(15px);
-      filter: blur(6px);
+  <style>
+    @keyframes fadeInSoft {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+        filter: blur(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-      filter: blur(0);
-    }
-  }
 
-  .fade-in {
-    animation: fadeInSoft 0.6s ease-out forwards;
-  }
-</style></head>
+    .fade-in {
+      animation: fadeInSoft 0.6s ease-out forwards;
+    }
+
+  
+  </style>
+
+</head>
 <body class="h-screen overflow-hidden bg-zinc-950 text-zinc-200 fade-in" 
       style="opacity: 0;">
 
   <!-- CABECERA FULL WIDTH -->
   <div class="w-full bg-gradient-to-r from-emerald-900/40 via-zinc-900 to-emerald-900/40 
-              backdrop-blur-xl border-b border-emerald-500/20 
-              shadow-[0_0_100px_rgba(16,185,129,0.2)] py-6 px-10">
+              backdrop-blur-xl
+              shadow-[0_0_100px_rgba(16,185,129,0.2)]">
 
-    <div class="flex justify-between items-center max-w-6xl mx-auto">
-      <div>
-        <h1 class="text-2xl tracking-[0.3em] text-emerald-400 font-semibold">
-          PANTRYFLOW
-        </h1>
-        <p class="text-xs text-zinc-400 tracking-widest">
-          INVENTARIO DOMÉSTICO INTELIGENTE
-        </p>
+    <div class="flex items-stretch max-w-6xl mx-auto h-24">
+
+      <!-- LOGO -->
+      <div class="flex items-center px-6">
+        <div>
+          <h1 class="text-2xl tracking-[0.3em] text-emerald-400 font-semibold">
+            PANTRYFLOW
+          </h1>
+          <p class="text-xs text-zinc-400 tracking-widest">
+            INVENTARIO DOMÉSTICO INTELIGENTE
+          </p>
+        </div>
       </div>
 
-      <a href="productos.html"
-         class="px-5 py-2 rounded-lg
-                bg-emerald-500/80 hover:bg-emerald-400
-                text-black font-semibold
-                shadow-[0_8px_20px_rgba(16,185,129,0.4)]
-                transition-all duration-200">
-        Gestionar productos
-      </a>
-      <a href="movimientos.html"
-          class="px-5 py-2 rounded-lg
-          bg-zinc-700 hover:bg-zinc-600
-          text-white font-semibold
-          shadow-[0_8px_20px_rgba(0,0,0,0.4)]
-          transition-all duration-200">
-          Registrar movimiento
-      </a>
+      <!-- BOTONES GRANDES -->
+      <div class="flex flex-1 justify-end pr-6 h-full">
+
+        <div class="flex h-full">
+
+          <!-- Botón 1 -->
+          <a href="productos.html"
+            class="h-full px-10 flex items-center justify-center
+                    text-sm tracking-widest uppercase font-semibold
+                    text-emerald-300 hover:text-white
+                    hover:bg-emerald-600/20
+                    transition-all duration-300">
+            Gestionar productos
+          </a>
+
+          <!-- Separador vertical -->
+          <div class="w-px bg-emerald-500/20"></div>
+
+          <!-- Botón 2 -->
+          <a href="movimientos.html"
+            class="h-full px-10 flex items-center justify-center
+                    text-sm tracking-widest uppercase font-semibold
+                    text-zinc-300 hover:text-white
+                    hover:bg-zinc-700/50
+                    transition-all duration-300">
+            Registrar movimiento
+          </a>
+
+        </div>
+
+      </div>
+
+
     </div>
-
   </div>
-
   <!-- CONTENIDO -->
-  <div class="max-w-6xl mx-auto h-[calc(100vh-96px)] flex flex-col px-10 py-8">
+  <div class="w-full h-[calc(100vh-96px)] flex flex-col px-6 py-8">
 
     <!-- TITULO SECCIÓN -->
     <div class="mb-6">
@@ -72,10 +95,10 @@
 
     <!-- CONTENEDOR STOCK -->
     <div id="stock-container"
-         class="flex-grow overflow-y-auto space-y-4 pr-2">
-
-      <!-- Las cards se generan por JS -->
-
+        class="overflow-y-auto pr-2
+                grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4
+                lg:grid-cols-6 xl:grid-cols-8
+                gap-4 content-start">
     </div>
 
   </div>
