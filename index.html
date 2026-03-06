@@ -1,177 +1,165 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>PantryFlow</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @keyframes fadeInSoft {
-      from {
-        opacity: 0;
-        transform: translateY(15px);
-        filter: blur(6px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-        filter: blur(0);
-      }
-    }
+    <head>
+        <meta charset="UTF-8" />
+        <title>PantryFlow</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            @keyframes fadeInSoft {
+                from {
+                    opacity: 0;
+                    transform: translateY(15px);
+                    filter: blur(6px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                    filter: blur(0);
+                }
+            }
 
-    .fade-in {
-      animation: fadeInSoft 0.6s ease-out forwards;
-    }
+            .fade-in {
+                animation: fadeInSoft 0.6s ease-out forwards;
+            }
+        </style>
+    </head>
+    <body
+        class="h-screen overflow-hidden bg-zinc-950 text-zinc-200 fade-in"
+        style="opacity: 0"
+    >
+        <!-- CABECERA FULL WIDTH -->
+        <div
+            class="w-full bg-gradient-to-r from-emerald-900/40 via-zinc-900 to-emerald-900/40 backdrop-blur-xl shadow-[0_0_100px_rgba(16,185,129,0.2)]"
+        >
+            <div class="flex items-stretch max-w-6xl mx-auto h-24">
+                <!-- LOGO -->
+                <div class="flex items-center px-6">
+                    <div>
+                        <h1
+                            class="text-2xl tracking-[0.3em] text-emerald-400 font-semibold"
+                        >
+                            PANTRYFLOW
+                        </h1>
+                        <p class="text-xs text-zinc-400 tracking-widest">
+                            INVENTARIO DOMÉSTICO INTELIGENTE
+                        </p>
+                    </div>
+                </div>
 
-  
-  </style>
+                <!-- BOTONES GRANDES -->
+                <div class="flex flex-1 justify-end pr-6 h-full">
+                    <div class="flex h-full">
+                        <!-- Botón 1 -->
+                        <a
+                            href="productos.html"
+                            class="h-full px-10 flex items-center justify-center text-sm tracking-widest uppercase font-semibold text-emerald-300 hover:text-white hover:bg-emerald-600/20 transition-all duration-300"
+                        >
+                            Gestionar productos
+                        </a>
 
-</head>
-<body class="h-screen overflow-hidden bg-zinc-950 text-zinc-200 fade-in" 
-      style="opacity: 0;">
+                        <!-- Separador vertical -->
+                        <div class="w-px bg-emerald-500/20"></div>
 
-  <!-- CABECERA FULL WIDTH -->
-  <div class="w-full bg-gradient-to-r from-emerald-900/40 via-zinc-900 to-emerald-900/40 
-              backdrop-blur-xl
-              shadow-[0_0_100px_rgba(16,185,129,0.2)]">
-
-    <div class="flex items-stretch max-w-6xl mx-auto h-24">
-
-      <!-- LOGO -->
-      <div class="flex items-center px-6">
-        <div>
-          <h1 class="text-2xl tracking-[0.3em] text-emerald-400 font-semibold">
-            PANTRYFLOW
-          </h1>
-          <p class="text-xs text-zinc-400 tracking-widest">
-            INVENTARIO DOMÉSTICO INTELIGENTE
-          </p>
+                        <!-- Botón 2 -->
+                        <a
+                            href="menu.html"
+                            class="h-full px-10 flex items-center justify-center text-sm tracking-widest uppercase font-semibold text-zinc-300 hover:text-white hover:bg-zinc-700/50 transition-all duration-300"
+                        >
+                            Gestionar menús
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+        <!-- CONTENIDO -->
+        <div class="w-full h-[calc(100vh-96px)] flex flex-col px-6 py-8">
+            <!-- TITULO SECCIÓN -->
+            <div class="mb-6">
+                <h2 class="text-emerald-400 tracking-widest text-sm uppercase">
+                    Stock actual
+                </h2>
+            </div>
 
-      <!-- BOTONES GRANDES -->
-      <div class="flex flex-1 justify-end pr-6 h-full">
-
-        <div class="flex h-full">
-
-          <!-- Botón 1 -->
-          <a href="productos.html"
-            class="h-full px-10 flex items-center justify-center
-                    text-sm tracking-widest uppercase font-semibold
-                    text-emerald-300 hover:text-white
-                    hover:bg-emerald-600/20
-                    transition-all duration-300">
-            Gestionar productos
-          </a>
-
-          <!-- Separador vertical -->
-          <div class="w-px bg-emerald-500/20"></div>
-
-          <!-- Botón 2 -->
-          <a href="movimientos.html"
-            class="h-full px-10 flex items-center justify-center
-                    text-sm tracking-widest uppercase font-semibold
-                    text-zinc-300 hover:text-white
-                    hover:bg-zinc-700/50
-                    transition-all duration-300">
-            Registrar movimiento
-          </a>
-
-        </div>
-
-      </div>
-
-
-    </div>
-  </div>
-  <!-- CONTENIDO -->
-  <div class="w-full h-[calc(100vh-96px)] flex flex-col px-6 py-8">
-
-    <!-- TITULO SECCIÓN -->
-    <div class="mb-6">
-      <h2 class="text-emerald-400 tracking-widest text-sm uppercase">
-        Stock actual
-      </h2>
-    </div>
-
-    <!-- CONTENEDOR STOCK -->
-    <div id="stock-container"
-        class="overflow-y-auto pr-2
-                grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4
-                lg:grid-cols-6 xl:grid-cols-8
-                gap-4 content-start">
-    </div>
-
-  </div>
-
-
-  <!-- MODAL MOVIMIENTO -->
-  <div id="modalMovimiento"
-      class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center hidden">
-
-    <div class="bg-zinc-900 border border-emerald-500/20 rounded-xl p-6 w-96">
-
-      <h2 id="modalProductoNombre"
-          class="text-lg text-emerald-400 mb-4 font-semibold">
-        Producto
-      </h2>
-
-      <div class="space-y-4">
-
-        <select id="tipoMovimiento"
-                class="w-full px-4 py-2 bg-zinc-800 rounded-lg border border-zinc-700">
-          <option value="entrada">Entrada</option>
-          <option value="salida">Salida</option>
-        </select>
-
-        <input id="cantidadMovimiento"
-              type="number"
-              placeholder="Cantidad"
-              class="w-full px-4 py-2 bg-zinc-800 rounded-lg border border-zinc-700"/>
-
-        <div class="flex gap-3 pt-2">
-
-          <button id="guardarMovimiento"
-                  class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-black py-2 rounded-lg">
-            Guardar
-          </button>
-
-          <button id="cancelarMovimiento"
-                  class="flex-1 bg-zinc-700 hover:bg-zinc-600 py-2 rounded-lg">
-            Cancelar
-          </button>
-
+            <!-- CONTENEDOR STOCK -->
+            <div
+                id="stock-container"
+                class="overflow-y-auto pr-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 content-start"
+            ></div>
         </div>
 
-      </div>
+        <!-- MODAL MOVIMIENTO -->
+        <div
+            id="modalMovimiento"
+            class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center hidden"
+        >
+            <div
+                class="bg-zinc-900 border border-emerald-500/20 rounded-xl p-6 w-96"
+            >
+                <h2
+                    id="modalProductoNombre"
+                    class="text-lg text-emerald-400 mb-4 font-semibold"
+                >
+                    Producto
+                </h2>
 
-    </div>
+                <div class="space-y-4">
+                    <select
+                        id="tipoMovimiento"
+                        class="w-full px-4 py-2 bg-zinc-800 rounded-lg border border-zinc-700"
+                    >
+                        <option value="entrada">Entrada</option>
+                        <option value="salida">Salida</option>
+                    </select>
 
-  </div>
+                    <input
+                        id="cantidadMovimiento"
+                        type="number"
+                        placeholder="Cantidad"
+                        class="w-full px-4 py-2 bg-zinc-800 rounded-lg border border-zinc-700"
+                    />
 
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config/supabase.js"></script>
-  <script src="js/app.js"></script>
+                    <div class="flex gap-3 pt-2">
+                        <button
+                            id="guardarMovimiento"
+                            class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-black py-2 rounded-lg"
+                        >
+                            Guardar
+                        </button>
 
-  <script>
-  document.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", function(e) {
-      const href = this.getAttribute("href");
-      if (!href || href.startsWith("#")) return;
+                        <button
+                            id="cancelarMovimiento"
+                            class="flex-1 bg-zinc-700 hover:bg-zinc-600 py-2 rounded-lg"
+                        >
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-      e.preventDefault();
+        <!-- Supabase -->
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script src="config/supabase.js"></script>
+        <script src="js/app.js"></script>
 
-      document.body.style.transition = "all 0.5s ease";
-      document.body.style.opacity = "0";
-      document.body.style.transform = "translateY(-10px)";
-      document.body.style.filter = "blur(4px)";
+        <script>
+            document.querySelectorAll("a").forEach((link) => {
+                link.addEventListener("click", function (e) {
+                    const href = this.getAttribute("href");
+                    if (!href || href.startsWith("#")) return;
 
-      setTimeout(() => {
-        window.location.href = href;
-      }, 300);
-    });
-  });
-</script>
+                    e.preventDefault();
 
-</body>
+                    document.body.style.transition = "all 0.5s ease";
+                    document.body.style.opacity = "0";
+                    document.body.style.transform = "translateY(-10px)";
+                    document.body.style.filter = "blur(4px)";
+
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 300);
+                });
+            });
+        </script>
+    </body>
 </html>
