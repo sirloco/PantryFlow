@@ -51,7 +51,9 @@
       <!-- FORMULARIO -->
       <div class="space-y-5">
 
-        <input type="text" placeholder="Buscar producto..."
+        <input 
+          type="text" 
+          placeholder="Buscar producto..."
           class="w-full px-4 py-3 rounded-xl 
                 bg-white/5 backdrop-blur-xl
                 shadow-[2px_2px_2px_rgba(0,167,42,0.90)]
@@ -59,7 +61,10 @@
                 focus:ring-2 
                 focus:ring-purple-100/10" />
          
-        <input type="text" placeholder="Nombre"
+        <input 
+          id="nombre" 
+          type="text" 
+          placeholder="Nombre"
           class="w-full px-4 py-3 rounded-xl
                 bg-white/5 backdrop-blur-xl
                 shadow-[2px_2px_2px_rgba(0,167,42,0.90)]         
@@ -67,7 +72,10 @@
                 focus:ring-2 
                 focus:ring-purple-100/10" />
 
-        <input type="text" placeholder="Código de barras"
+        <input 
+          id="codigo_barras" 
+          type="text" 
+          placeholder="Código de barras"
           class="w-full px-4 py-3 rounded-xl 
                 bg-white/5 backdrop-blur-md 
                 shadow-[2px_2px_2px_rgba(0,167,42,0.90)]
@@ -75,30 +83,54 @@
                 focus:ring-2 
                 focus:ring-purple-100/10" />
 
-        <select
+        <select 
+          id="categoria"
           class="w-full px-4 py-3 rounded-xl bg-white/5 backdrop-blur-md 
                 shadow-[2px_2px_2px_rgba(0,167,42,0.90)]
                 focus:outline-none
                 focus:ring-2 
-                focus:ring-purple-100/10" />
+                focus:ring-purple-100/10">
           <option>Categoría</option>
           <option>fresco</option>
           <option>seco</option>
           <option>refrigerado</option>
         </select>
 
-        <select
+        <select 
+          id="unidad"
           class="w-full px-4 py-3 rounded-xl bg-white/5 backdrop-blur-md 
                  border border-white/10
                 shadow-[2px_2px_2px_rgba(0,167,42,0.90)]
                 focus:outline-none
                 focus:ring-2 
-                focus:ring-purple-100/10" />
+                focus:ring-purple-100/10">
           <option>Unidad</option>
           <option>g</option>
-          <option>ml</option>
+          <option>L</option>
           <option>unit</option>
         </select>
+
+        <input 
+          id="unit_size" 
+          type="number" 
+          placeholder="Cantidad por unidad (ej: 150)"
+          class="w-full px-4 py-3 rounded-xl 
+                bg-white/5 backdrop-blur-md
+                shadow-[2px_2px_2px_rgba(0,167,42,0.90)]
+                focus:outline-none
+                focus:ring-2 
+                focus:ring-purple-100/10" />
+        
+        <input 
+          id="cantidad_inicial"
+          type="number"
+          placeholder="Cantidad inicial comprada"
+          class="w-full px-4 py-3 rounded-xl 
+                bg-white/5 backdrop-blur-md
+                shadow-[2px_2px_2px_rgba(0,167,42,0.90)]
+                focus:outline-none
+                focus:ring-2 
+                focus:ring-purple-100/10" />
 
       </div>
 
@@ -113,8 +145,9 @@
         </div>
 
         <div class="w-full flex gap-6">
-
+          
           <button
+            id="guardarProducto"
             class="flex-1 py-4 rounded-lg bg-emerald-500/80
                    hover:bg-emerald-400 text-black font-semibold
                    shadow-[0_10px_30px_rgba(16,185,129,0.4)]
@@ -148,7 +181,7 @@
         <div class="text-right">Unidad</div>
       </div>
 
-      <div class="flex-grow overflow-y-auto mt-4 space-y-3 pr-2">
+      <div id="stock-container" class="flex-grow overflow-y-auto mt-4 space-y-3 pr-2">
 
         <div class="grid grid-cols-3 bg-white/5 backdrop-blur-md 
                     px-4 py-3 rounded-xl border border-white/10
@@ -188,24 +221,29 @@
     </div>
 
   </div>
- <script>
-  document.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", function(e) {
-      const href = this.getAttribute("href");
-      if (!href || href.startsWith("#")) return;
 
-      e.preventDefault();
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config/supabase.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", function(e) {
+        const href = this.getAttribute("href");
+        if (!href || href.startsWith("#")) return;
 
-      document.body.style.transition = "all 0.5s ease";
-      document.body.style.opacity = "0";
-      document.body.style.transform = "translateY(-10px)";
-      document.body.style.filter = "blur(4px)";
+        e.preventDefault();
 
-      setTimeout(() => {
-        window.location.href = href;
-      }, 300);
+        document.body.style.transition = "all 0.5s ease";
+        document.body.style.opacity = "0";
+        document.body.style.transform = "translateY(-10px)";
+        document.body.style.filter = "blur(4px)";
+
+        setTimeout(() => {
+          window.location.href = href;
+        }, 300);
+      });
     });
-  });
-</script>
+  </script>
 </body>
 </html>

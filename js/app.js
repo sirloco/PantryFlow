@@ -14,6 +14,8 @@ async function cargarInventario() {
 
   data.forEach(item => {
 
+    console.log(item);
+
     const card = document.createElement("div");
   
     card.className = `
@@ -26,8 +28,7 @@ async function cargarInventario() {
       hover:shadow-[0_0_40px_rgba(16,185,129,0.55)]
     `;
 
-    const imagen = item.imagen_url 
-      ?? "https://via.placeholder.com/200x200?text=No+Image";
+    const imagen = item.imagen_url ?? "https://placehold.co/200x200";
 
     card.innerHTML = `
       <div class="w-full aspect-square bg-zinc-800">
@@ -42,16 +43,130 @@ async function cargarInventario() {
         </h3>
 
         <p class="text-[11px] text-zinc-400 mt-1">
-          ${item.stock} ${item.unidad ?? ""}
+          ${item.stock} ${item.unidad}
         </p>
 
       </div>
     `;
 
+    card.addEventListener("click", () => abrirModalMovimiento(item));
+
     contenedor.appendChild(card);
 
   });
 
+
+  
 }
+
+const botonGuardar = document.getElementById("guardarProducto");
+
+if (botonGuardar) {
+  botonGuardar.addEventListener("click", async () => {
+
+    const nombre = document.getElementById("nombre").value;
+    const codigo_barras = document.getElementById("codigo_barras").value;
+    const categoria = document.getElementById("categoria").value;
+    const unidad = document.getElementById("unidad").value;
+    const unit_size = document.getElementById("unit_size").value;
+    const cantidad_inicial = document.getElementById("cantidad_inicial").value;
+
+    if (!nombre) {
+      alert("El producto necesita nombre");
+      return;
+    }
+
+    const { data, error } = await supabaseClient
+      .from("productos")
+      .insert([
+        {
+          nombre: nombre,
+          codigo_barras: codigo_barras,
+          categoria: categoria,
+          unidad: unidad,
+          unit_size: unit_size
+        }
+      ]).select();
+
+    if (!error && cantidad_inicial > 0) {
+
+      const producto_id = data[0].id;
+
+      const { error: errorMovimiento } = await supabaseClient
+        .from("movimientos")
+        .insert([
+          {
+            producto_id: producto_id,
+            tipo: "entrada",
+            cantidad: cantidad_inicial
+          }
+        ]);
+
+      if (errorMovimiento) {
+        console.error(errorMovimiento);
+      }
+
+    }
+
+    if (error) {
+      console.error(error);
+      alert("Error al guardar producto");
+      return;
+    }
+
+    alert("Producto guardado correctamente");
+
+  });
+}
+
+let productoSeleccionado = null;
+
+function abrirModalMovimiento(producto) {
+
+  productoSeleccionado = producto;
+
+  document.getElementById("modalProductoNombre").innerText =
+    producto.nombre;
+
+  document.getElementById("modalMovimiento").classList.remove("hidden");
+}
+
+document.getElementById("cancelarMovimiento").addEventListener("click", () => {
+
+  document.getElementById("modalMovimiento").classList.add("hidden");
+
+});
+
+document.getElementById("guardarMovimiento").addEventListener("click", async () => {
+
+  const tipo = document.getElementById("tipoMovimiento").value;
+  const cantidad = document.getElementById("cantidadMovimiento").value;
+
+  if (!cantidad || cantidad <= 0) {
+    alert("Cantidad inválida");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("movimientos")
+    .insert([
+      {
+        producto_id: productoSeleccionado.id,
+        tipo: tipo,
+        cantidad: cantidad
+      }
+    ]);
+
+  if (error) {
+    console.error(error);
+    alert("Error guardando movimiento");
+    return;
+  }
+
+  document.getElementById("modalMovimiento").classList.add("hidden");
+
+  cargarInventario();
+
+});
 
 cargarInventario();

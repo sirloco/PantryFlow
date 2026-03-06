@@ -103,6 +103,51 @@
 
   </div>
 
+
+  <!-- MODAL MOVIMIENTO -->
+  <div id="modalMovimiento"
+      class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center hidden">
+
+    <div class="bg-zinc-900 border border-emerald-500/20 rounded-xl p-6 w-96">
+
+      <h2 id="modalProductoNombre"
+          class="text-lg text-emerald-400 mb-4 font-semibold">
+        Producto
+      </h2>
+
+      <div class="space-y-4">
+
+        <select id="tipoMovimiento"
+                class="w-full px-4 py-2 bg-zinc-800 rounded-lg border border-zinc-700">
+          <option value="entrada">Entrada</option>
+          <option value="salida">Salida</option>
+        </select>
+
+        <input id="cantidadMovimiento"
+              type="number"
+              placeholder="Cantidad"
+              class="w-full px-4 py-2 bg-zinc-800 rounded-lg border border-zinc-700"/>
+
+        <div class="flex gap-3 pt-2">
+
+          <button id="guardarMovimiento"
+                  class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-black py-2 rounded-lg">
+            Guardar
+          </button>
+
+          <button id="cancelarMovimiento"
+                  class="flex-1 bg-zinc-700 hover:bg-zinc-600 py-2 rounded-lg">
+            Cancelar
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config/supabase.js"></script>
