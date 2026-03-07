@@ -18,47 +18,44 @@ const mapaProteinas = {
     "frijoles",
   ],
 };
-
 export function equilibrarProteinas(recetas) {
   const objetivo = {
-    pollo: 2,
-    cerdo: 1,
-    ternera: 1,
-    pescado: 2,
-    huevos: 2,
-    vegetariano: 4,
+    pollo: 3,
+    pescado: 3,
+    vegetariano: 3,
   };
 
   const conteo = {
     pollo: 0,
-    cerdo: 0,
-    ternera: 0,
     pescado: 0,
-    huevos: 0,
     vegetariano: 0,
   };
 
   const menu = [];
 
-  // 1️⃣ Intentar cumplir cuotas
   for (const r of recetas) {
     const tipo = tipoProteina(r);
 
-    if (conteo[tipo] < objetivo[tipo]) {
+    if (!categoriaPermitida(r, menu)) continue;
+
+    if (objetivo[tipo] && conteo[tipo] < objetivo[tipo]) {
       menu.push(r);
       conteo[tipo]++;
     }
 
-    if (menu.length === 12) return menu;
+    if (menu.length === 12) {
+      return menu;
+    }
   }
 
-  // 2️⃣ Rellenar con cualquier receta restante
   for (const r of recetas) {
-    if (!menu.includes(r)) {
+    if (!menu.includes(r) && categoriaPermitida(r, menu)) {
       menu.push(r);
     }
 
-    if (menu.length === 12) break;
+    if (menu.length === 12) {
+      break;
+    }
   }
 
   return menu;
@@ -115,46 +112,47 @@ export function obtenerIngredientes(recetas) {
     cantidad,
   }));
 }
+export function nombreBase(receta) {
+  let nombre = (receta.name || "").toLowerCase();
+
+  nombre = nombre
+    .replace(/con .*/, "")
+    .replace(/extra .*/, "")
+    .replace(/exprés /, "")
+    .replace(/rápido /, "")
+    .replace(/:/g, "")
+    .trim();
+
+  return nombre;
+}
 
 export function filtrarDuplicadas(recetas) {
   const vistas = new Set();
 
   return recetas.filter((r) => {
-    let nombre = (r.name || "").toLowerCase();
+    const base = nombreBase(r);
+    console.log("BASE RECETA:", nombreBase(r), r.name);
+    if (vistas.has(base)) return false;
 
-    nombre = nombre
-      .replace(/^extra de /, "")
-      .replace(/^extra /, "")
-      .replace(/^exprés /, "")
-      .replace(/^rápido /, "")
-      .replace(/:/g, "")
-      .trim();
-
-    if (vistas.has(nombre)) return false;
-
-    vistas.add(nombre);
+    vistas.add(base);
 
     return true;
   });
 }
 export function tipoProteina(receta) {
-  const ingredientes = receta.ingredients || receta.data?.ingredients || [];
-
+  const ingredientes = receta.ingredients ||
+    receta.data?.ingredients || [{ name: receta.name }];
   const nombres = ingredientes.map((i) => (i.name || "").toLowerCase());
-
   for (const tipo in mapaProteinas) {
     const palabras = mapaProteinas[tipo];
-
     const encontrado = nombres.some((ingrediente) =>
       palabras.some((p) => ingrediente.includes(p)),
     );
-
     if (encontrado) {
       if (tipo === "vegetal") return "vegetariano";
       return tipo;
     }
   }
-
   return "vegetariano";
 }
 

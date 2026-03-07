@@ -1,6 +1,25 @@
 const HFRESH_TOKEN =
   "211|nhuth_hfdb_nne4Qi9ivpSosTawB6I8RzOF4lMNKpz9Am4mMxfm49eb5033";
 
+export function normalizeRecipe(r) {
+  return {
+    id: r.id,
+    name: r.name,
+    image: r.imagePath || null,
+
+    protein: detectProtein(r),
+    carbs: detectCarb(r),
+    cuisine: detectCuisine(r),
+
+    vegetarian: r.tags?.includes("Vegetarian") || false,
+
+    time: r.totalTime || 0,
+    oven: detectOven(r),
+
+    ingredients: r.ingredients || [],
+  };
+}
+
 export async function obtenerRecetas(numero = 10) {
   const url =
     "https://corsproxy.io/?https://api.hfresh.info/es-ES/recipes?per_page=" +
@@ -35,7 +54,7 @@ export async function obtenerImagenReceta(url) {
 
     // buscar imagen HelloFresh limpia
     const match = html.match(
-      /https:\/\/img\.hellofresh\.com[^"]+Main_high[^"]+/,
+      /https:\/\/img\.hellofresh\.com[^"]+Main_high[^"]+\.jpg/,
     );
 
     if (match) {

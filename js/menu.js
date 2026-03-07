@@ -8,6 +8,12 @@ import { obtenerImagenReceta } from "./hfresh.js";
 
 let poolRecetas = [];
 
+const { data } = await supabaseClient
+  .from("menus")
+  .select("*")
+  .order("created_at", { ascending: false })
+  .limit(1);
+
 async function generarMenuSemanal() {
   let recetas = await obtenerRecetas(150);
 
@@ -23,19 +29,39 @@ async function generarMenuSemanal() {
 
   await Promise.all(
     recetas.map(async (r) => {
-      r.foto = await obtenerImagenReceta(r.url);
+      obtenerImagenReceta(r.url);
     }),
   );
 
   const ingredientes = obtenerIngredientes(recetas);
   mostrarMenu(recetas);
   mostrarListaCompra(ingredientes);
+
+  await supabaseClient.from("menus").insert({
+    menu: recetas,
+  });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   document
     .getElementById("generarMenu")
     .addEventListener("click", generarMenuSemanal);
+
+  const { data } = await supabase
+    .from("menus")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(1);
+
+  if (data?.length) {
+    mostrarMenu(data[0].menu);
+
+    const ingredientes = obtenerIngredientes(data[0].menu);
+    mostrarListaCompra(ingredientes);
+    await supabase.from("menus").insert({
+      menu: recetas,
+    });
+  }
 });
 
 function mostrarMenu(recetas) {
@@ -94,6 +120,8 @@ function mostrarMenu(recetas) {
       swap: true,
       handle: ".drag-handle",
       filter: "button",
+      swap: true,
+      swapClass: "bg-teal-500/20",
 
       onMove: function (evt) {
         const card = evt.dragged;
@@ -112,13 +140,22 @@ function mostrarMenu(recetas) {
 
     const nombre = r?.name || "receta";
     const tiempo = r?.prep_time || "?";
-
     const foto = r.foto || "";
+    console.log("foto receta:", r.name, foto);
 
     const tipo = tipoProteina(r);
     const icono = iconos[tipo] || "";
 
     const card = document.createElement("div");
+
+    card.classList.add("card");
+
+    card.dataset.id = r.id;
+    const usadas = Array.from(document.querySelectorAll(".card")).map(
+      (c) => c.dataset.id,
+    );
+    card.dataset.protein = tipoProteina(r);
+    card.dataset.name = r.name;
 
     card.className =
       "bg-zinc-900 rounded-xl overflow-hidden shadow hover:scale-105 transition-all cursor-pointer";
@@ -185,11 +222,15 @@ function mostrarMenu(recetas) {
         if (card.dataset.locked === "true") return;
 
         // recetas ya usadas en el menú
-        const usadas = Array.from(document.querySelectorAll(".titulo")).map(
-          (el) => el.textContent,
+        const usadas = Array.from(document.querySelectorAll(".card")).map(
+          (c) => c.dataset.id,
         );
 
-        const disponibles = poolRecetas.filter((r) => !usadas.includes(r.name));
+        const protein = card.dataset.protein;
+
+        const disponibles = poolRecetas.filter(
+          (r) => tipoProteina(r) === protein && !usadas.includes(String(r.id)),
+        );
 
         const nueva =
           disponibles[Math.floor(Math.random() * disponibles.length)];
@@ -198,7 +239,9 @@ function mostrarMenu(recetas) {
 
         const img = card.querySelector("img");
         if (img) img.src = foto;
+
         card.querySelector(".titulo").textContent = nueva.name;
+        card.dataset.id = nueva.id;
 
         card.onclick = () => {
           window.open(nueva.url, "_blank");
