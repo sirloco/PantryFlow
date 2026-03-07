@@ -24,17 +24,22 @@ async function cargarInventario() {
       cursor-pointer
       hover:border-emerald-500/40
       hover:shadow-[0_0_40px_rgba(16,185,129,0.55)]
-    `;
-
-    const imagen = item.imagen_url ?? "https://placehold.co/200x200";
-
+      `;
+      
+      const imagen = item.imagen_url ?? "https://placehold.co/200x200";
+      let unidades = 0;
+      if (item.unit_size && item.unit_size > 0) {
+        unidades = item.stock / item.unit_size;
+      }
+              
+    
     card.innerHTML = `
     <div class="drag-handle relative overflow-hidden h-32">
       <img src="${imagen}" class="w-full h-full object-cover">
     </div>
     <div class="p-3 space-y-1">
       <div class="text-sm font-semibold text-zinc-200 leading-snug truncate">${item.nombre}</div>
-      <div class="text-sm text-emerald-400">${item.stock} ${item.unidad ?? ""}</div>
+      <div class="text-sm text-emerald-400">${unidades} U · ${item.stock} ${item.unidad ?? ""}</div>
     </div>`;
 
     card.addEventListener("click", () => abrirModalMovimiento(item));
