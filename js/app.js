@@ -14,8 +14,6 @@ async function cargarInventario() {
 
   data.forEach(item => {
 
-    console.log(item);
-
     const card = document.createElement("div");
   
     card.className = `
@@ -65,11 +63,18 @@ if (botonGuardar) {
   botonGuardar.addEventListener("click", async () => {
 
     const nombre = document.getElementById("nombre").value;
-    const codigo_barras = document.getElementById("codigo_barras").value;
+    let codigo_barras = document.getElementById("codigo_barras").value;
     const categoria = document.getElementById("categoria").value;
     const unidad = document.getElementById("unidad").value;
-    const unit_size = document.getElementById("unit_size").value;
-    const cantidad_inicial = document.getElementById("cantidad_inicial").value;
+    const unitSize = document.getElementById("unit_size").value;
+    const paquetes = document.getElementById("paquetes").value;
+    const imagen = document.getElementById("imagen_url").value;
+    const cantidadMovimiento = unitSize * paquetes;
+
+    if (codigo_barras === "") {
+      codigo_barras = null;
+    }
+
 
     if (!nombre) {
       alert("El producto necesita nombre");
@@ -84,11 +89,12 @@ if (botonGuardar) {
           codigo_barras: codigo_barras,
           categoria: categoria,
           unidad: unidad,
-          unit_size: unit_size
+          unit_size: unitSize,
+          imagen_url: imagen
         }
       ]).select();
 
-    if (!error && cantidad_inicial > 0) {
+    if (!error && paquetes > 0) {
 
       const producto_id = data[0].id;
 
@@ -98,7 +104,7 @@ if (botonGuardar) {
           {
             producto_id: producto_id,
             tipo: "entrada",
-            cantidad: cantidad_inicial
+            cantidad: cantidadMovimiento
           }
         ]);
 
@@ -164,6 +170,14 @@ document.getElementById("guardarMovimiento").addEventListener("click", async () 
   }
 
   document.getElementById("modalMovimiento").classList.add("hidden");
+
+
+  document.getElementById("nombre").value = "";
+  document.getElementById("codigo_barras").value = "";
+  document.getElementById("unit_size").value = "";
+  document.getElementById("paquetes").value = "";
+  document.getElementById("imagen_url").value = "";
+  preview.src = "";
 
   cargarInventario();
 

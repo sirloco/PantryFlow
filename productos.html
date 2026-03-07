@@ -52,97 +52,65 @@
       <div class="space-y-5">
 
         <input 
-          type="text" 
-          placeholder="Buscar producto..."
-          class="w-full px-4 py-3 rounded-xl 
-                bg-white/5 backdrop-blur-xl
-                shadow-[2px_2px_2px_rgba(0,167,42,0.90)]
-                focus:outline-none
-                focus:ring-2 
-                focus:ring-purple-100/10" />
-         
-        <input 
           id="nombre" 
           type="text" 
-          placeholder="Nombre"
-          class="w-full px-4 py-3 rounded-xl
-                bg-white/5 backdrop-blur-xl
-                shadow-[2px_2px_2px_rgba(0,167,42,0.90)]         
-                focus:outline-none
-                focus:ring-2 
-                focus:ring-purple-100/10" />
+          placeholder="Nombre producto"
+          class="w-full px-4 py-3 rounded-xl bg-white/5 backdrop-blur-xl shadow-[2px_2px_2px_rgba(0,167,42,0.9)]">
 
         <input 
           id="codigo_barras" 
           type="text" 
           placeholder="Código de barras"
-          class="w-full px-4 py-3 rounded-xl 
-                bg-white/5 backdrop-blur-md 
-                shadow-[2px_2px_2px_rgba(0,167,42,0.90)]
-                focus:outline-none
-                focus:ring-2 
-                focus:ring-purple-100/10" />
+          class="w-full px-4 py-3 rounded-xl bg-white/5 backdrop-blur-xl shadow-[2px_2px_2px_rgba(0,167,42,0.9)]">
 
         <select 
           id="categoria"
-          class="w-full px-4 py-3 rounded-xl bg-white/5 backdrop-blur-md 
-                shadow-[2px_2px_2px_rgba(0,167,42,0.90)]
-                focus:outline-none
-                focus:ring-2 
-                focus:ring-purple-100/10">
-          <option>Categoría</option>
-          <option>fresco</option>
-          <option>seco</option>
-          <option>refrigerado</option>
+          class="w-full px-4 py-3 rounded-xl bg-white/5 backdrop-blur-xl shadow-[2px_2px_2px_rgba(0,167,42,0.9)]">
+          <option value="">Categoría</option>
+          <option value="fresco">fresco</option>
+          <option value="seco">seco</option>
+          <option value="refrigerado">refrigerado</option>
         </select>
 
         <select 
           id="unidad"
-          class="w-full px-4 py-3 rounded-xl bg-white/5 backdrop-blur-md 
-                 border border-white/10
-                shadow-[2px_2px_2px_rgba(0,167,42,0.90)]
-                focus:outline-none
-                focus:ring-2 
-                focus:ring-purple-100/10">
-          <option>Unidad</option>
-          <option>g</option>
-          <option>L</option>
-          <option>unit</option>
+          class="w-full px-4 py-3 rounded-xl bg-white/5 backdrop-blur-xl shadow-[2px_2px_2px_rgba(0,167,42,0.9)]">
+          <option value="">Unidad</option>
+          <option value="g">g</option>
+          <option value="L">L</option>
+          <option value="U">U</option>
         </select>
 
         <input 
           id="unit_size" 
-          type="number" 
-          placeholder="Cantidad por unidad (ej: 150)"
-          class="w-full px-4 py-3 rounded-xl 
-                bg-white/5 backdrop-blur-md
-                shadow-[2px_2px_2px_rgba(0,167,42,0.90)]
-                focus:outline-none
-                focus:ring-2 
-                focus:ring-purple-100/10" />
-        
-        <input 
-          id="cantidad_inicial"
           type="number"
-          placeholder="Cantidad inicial comprada"
-          class="w-full px-4 py-3 rounded-xl 
-                bg-white/5 backdrop-blur-md
-                shadow-[2px_2px_2px_rgba(0,167,42,0.90)]
-                focus:outline-none
-                focus:ring-2 
-                focus:ring-purple-100/10" />
+          placeholder="Cantidad por paquete (ej: 150)"
+          class="w-full px-4 py-3 rounded-xl bg-white/5 backdrop-blur-xl shadow-[2px_2px_2px_rgba(0,167,42,0.9)]">
 
+        <input 
+          id="paquetes"
+          type="number"
+          placeholder="Paquetes comprados"
+          class="w-full px-4 py-3 rounded-xl bg-white/5 backdrop-blur-xl shadow-[2px_2px_2px_rgba(0,167,42,0.9)]">
+          
       </div>
-
+        
       <!-- IMAGEN + BOTONES -->
-      <div class="flex flex-col items-center justify-start space-y-8">
+      <div class="flex flex-col items-center space-y-4">
+        
+        <img id="previewImagen"
+        class="w-64 h-64 rounded-2xl border border-emerald-500/20 object-cover bg-black/30"
+        src="">
+        
+        <input id="imagen_url"
+        type="text"
+        placeholder="Pegar URL de imagen"
+        class="w-full px-4 py-3 rounded-xl bg-white/5 backdrop-blur-xl shadow-[2px_2px_2px_rgba(0,167,42,0.9)]">
+        
+      </div>
+    </div>
 
-        <div class="w-64 h-64 rounded-2xl border border-emerald-500/20
-                    bg-white/5 backdrop-blur-xl flex items-center justify-center
-                    text-zinc-500 text-sm
-                    shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_20px_60px_rgba(0,0,0,0.6),0_0_60px_rgba(16,185,129,0.15)]">
-          Imagen producto<br>250 x 250
-        </div>
+      <div class="flex flex-col items-center justify-start space-y-8">
 
         <div class="w-full flex gap-6">
           
@@ -165,55 +133,6 @@
             ELIMINAR
           </button>
 
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- LISTA PRODUCTOS -->
-    <div class="mt-10 flex-grow flex flex-col
-              ">
-
-      <div class="grid grid-cols-3 text-xs uppercase tracking-widest text-emerald-400 pb-3 border-b border-white/10">
-        <div>Nombre</div>
-        <div>Categoría</div>
-        <div class="text-right">Unidad</div>
-      </div>
-
-      <div id="stock-container" class="flex-grow overflow-y-auto mt-4 space-y-3 pr-2">
-
-        <div class="grid grid-cols-3 bg-white/5 backdrop-blur-md 
-                    px-4 py-3 rounded-xl border border-white/10
-                    shadow-[2px_2px_6px_rgba(0,167,42,0.6)]
-                    transition-all duration-200
-                    hover:shadow-[4px_4px_12px_rgba(0,167,42,0.9)]
-                    hover:translate-y-[-2px]">
-          <div>POLLO</div>
-          <div class="text-zinc-400">fresco</div>
-          <div class="text-right text-emerald-400">g</div>
-        </div>
-
-        <div class="grid grid-cols-3 bg-white/5 backdrop-blur-md 
-                    px-4 py-3 rounded-xl border border-white/10
-                    shadow-[2px_2px_6px_rgba(0,167,42,0.6)]
-                    transition-all duration-200
-                    hover:shadow-[4px_4px_12px_rgba(0,167,42,0.9)]
-                    hover:translate-y-[-2px]">
-          <div>ARROZ</div>
-          <div class="text-zinc-400">seco</div>
-          <div class="text-right text-emerald-400">g</div>
-        </div>
-
-        <div class="grid grid-cols-3 bg-white/5 backdrop-blur-md 
-                    px-4 py-3 rounded-xl border border-white/10
-                    shadow-[2px_2px_6px_rgba(0,167,42,0.6)]
-                    transition-all duration-200
-                    hover:shadow-[4px_4px_12px_rgba(0,167,42,0.9)]
-                    hover:translate-y-[-2px]">
-          <div>HUEVOS</div>
-          <div class="text-zinc-400">refrigerado</div>
-          <div class="text-right text-emerald-400">unit</div>
         </div>
 
       </div>
@@ -244,6 +163,13 @@
         }, 300);
       });
     });
-  </script>
+
+    const inputImagen = document.getElementById("imagen_url");
+    const preview = document.getElementById("previewImagen");
+
+    inputImagen.addEventListener("input", () => {
+        preview.src = inputImagen.value;
+    });
+  </script>  
 </body>
 </html>
