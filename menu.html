@@ -1,143 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>PantryFlow - Movimientos</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <head>
+        <meta charset="UTF-8" />
+        <title>PantryFlow - Menús</title>
 
+        <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
-  body.mode-entrada {
-    background-color: #0a0f0c;
-  }
+        <!-- SUPABASE LIBRERÍA -->
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    </head>
 
-  body.mode-salida {
-    background-color: #120606;
-  }
+    <body class="bg-zinc-950 text-zinc-200 p-8">
+        <h1 class="text-xl mb-6 text-emerald-400">Generar menú semanal</h1>
 
-  /* Glow cabecera modo entrada */
-  body.mode-entrada .cabecera {
-    box-shadow: 0 0 100px rgba(16,185,129,0.25);
-    border-color: rgba(16,185,129,0.2);
-  }
-
-  /* Glow cabecera modo salida */
-  body.mode-salida .cabecera {
-    box-shadow: 0 0 100px rgba(255,0,0,0.25);
-    border-color: rgba(255,0,0,0.2);
-  }
-</style>
-
-</head>
-
-<body class="h-screen overflow-hidden bg-zinc-950 text-zinc-200 mode-entrada">
-
-  <!-- CABECERA -->
-   <div class="cabecera w-full bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-900
-            backdrop-blur-xl border-b border-white/10
-            transition-all duration-500 py-6 px-10">
-  
-    <div class="flex justify-between items-center max-w-6xl mx-auto">
-      <h1 class="text-2xl tracking-[0.3em] text-emerald-400 font-semibold">
-        REGISTRAR MOVIMIENTO
-      </h1>
-
-      <a href="index.html"
-         class="text-sm text-zinc-400 hover:text-emerald-400 transition">
-        ← Volver
-      </a>
-    </div>
-  </div>
-
-  <!-- CONTENIDO -->
-  <div class="max-w-xl mx-auto h-[calc(100vh-96px)] flex flex-col justify-center px-6">
-
-    <div class="space-y-6">
-
-      <!-- SELECT PRODUCTO -->
-      <select
-        class="w-full px-4 py-3 rounded-xl
-               bg-white/5 backdrop-blur-xl
-               border border-white/10
-               shadow-[2px_2px_6px_rgba(0,167,42,0.6)]
-               focus:outline-none
-               transition-all duration-200">
-        <option>Seleccionar producto</option>
-        <option>POLLO</option>
-        <option>ARROZ</option>
-        <option>HUEVOS</option>
-      </select>
-
-      <!-- TOGGLE ENTRADA / SALIDA -->
-      <div class="flex bg-white/5 rounded-xl overflow-hidden border border-white/10">
-
-        <button id="btnEntrada"
-          class="flex-1 py-3 bg-emerald-500/80 text-black font-semibold">
-          Entrada
+        <button
+            id="generarMenu"
+            class="bg-emerald-500 px-6 py-3 rounded text-black font-semibold"
+        >
+            Generar menú
         </button>
 
-        <button id="btnSalida"
-          class="flex-1 py-3 bg-transparent text-zinc-400 font-semibold">
-          Salida
-        </button>
+        <h2 class="mt-8 mb-4 text-emerald-400">Recetas elegidas</h2>
+        <div id="menu-container" class="space-y-6"></div>
 
-      </div>
+        <h2 class="mt-8 mb-4 text-emerald-400">Lista de compra</h2>
+        <div id="lista-compra" class="space-y-1"></div>
 
-      <!-- CANTIDAD -->
-      <input type="number" placeholder="Cantidad"
-        class="w-full px-4 py-3 rounded-xl
-               bg-white/5 backdrop-blur-xl
-               border border-white/10
-               shadow-[2px_2px_6px_rgba(0,167,42,0.6)]
-               focus:outline-none
-               transition-all duration-200" />
+        <!-- CONFIG -->
+        <script src="config/supabase.js"></script>
 
-      <!-- FECHA (solo diseño por ahora) -->
-      <input type="date"
-        class="w-full px-4 py-3 rounded-xl
-               bg-white/5 backdrop-blur-xl
-               border border-white/10
-               shadow-[2px_2px_6px_rgba(0,167,42,0.6)]
-               focus:outline-none
-               transition-all duration-200" />
-
-      <!-- BOTÓN CONFIRMAR -->
-      <button
-        class="w-full py-4 rounded-xl
-               bg-emerald-500/80 hover:bg-emerald-400
-               text-black font-semibold
-               shadow-[0_10px_30px_rgba(16,185,129,0.4)]
-               transition-all duration-200">
-        CONFIRMAR
-      </button>
-
-    </div>
-
-  </div>
-
-  <script>
-    const btnEntrada = document.getElementById("btnEntrada");
-    const btnSalida = document.getElementById("btnSalida");
-    const body = document.body;
-
-    btnEntrada.addEventListener("click", () => {
-      body.classList.remove("mode-salida");
-      body.classList.add("mode-entrada");
-
-      btnEntrada.classList.add("bg-emerald-500/80", "text-black");
-      btnSalida.classList.remove("bg-red-500/80", "text-black");
-      btnSalida.classList.add("text-zinc-400");
-    });
-
-    btnSalida.addEventListener("click", () => {
-      body.classList.remove("mode-entrada");
-      body.classList.add("mode-salida");
-
-      btnSalida.classList.add("bg-red-500/80", "text-black");
-      btnEntrada.classList.remove("bg-emerald-500/80", "text-black");
-      btnEntrada.classList.add("text-zinc-400");
-    });
-  </script>
-
-</body>
+        <!-- TU CÓDIGO -->
+        <script type="module" src="js/menu.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/plugins/Swap/Sortable.swap.min.js"></script>
+    </body>
 </html>
