@@ -18,7 +18,7 @@ async function cargarInventario() {
   
     card.className = `
       bg-zinc-900/70
-      border border-emerald-500/10
+      border border-zinc-800
       rounded-xl overflow-hidden
       transition-all duration-300
       cursor-pointer
@@ -29,23 +29,13 @@ async function cargarInventario() {
     const imagen = item.imagen_url ?? "https://placehold.co/200x200";
 
     card.innerHTML = `
-      <div class="w-full aspect-square bg-zinc-800">
-        <img src="${imagen}"
-             class="w-full h-full object-cover">
-      </div>
-
-      <div class="border-t border-emerald-500/10 p-2">
-
-        <h3 class="text-xs font-semibold text-emerald-400 truncate">
-          ${item.nombre}
-        </h3>
-
-        <p class="text-[11px] text-zinc-400 mt-1">
-          ${item.stock} ${item.unidad}
-        </p>
-
-      </div>
-    `;
+    <div class="drag-handle relative overflow-hidden h-32">
+      <img src="${imagen}" class="w-full h-full object-cover">
+    </div>
+    <div class="p-3 space-y-1">
+      <div class="text-sm font-semibold text-zinc-200 leading-snug truncate">${item.nombre}</div>
+      <div class="text-sm text-emerald-400">${item.stock} ${item.unidad ?? ""}</div>
+    </div>`;
 
     card.addEventListener("click", () => abrirModalMovimiento(item));
 
