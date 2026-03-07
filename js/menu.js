@@ -8,13 +8,9 @@ import { obtenerImagenReceta } from "./hfresh.js";
 
 let poolRecetas = [];
 
-const { data } = await supabaseClient
-  .from("menus")
-  .select("*")
-  .order("created_at", { ascending: false })
-  .limit(1);
-
 async function generarMenuSemanal() {
+  console.log("GENERANDO MENU");
+
   let recetas = await obtenerRecetas(150);
 
   recetas = recetas.filter((r) => (r.prep_time || 0) <= 30);
@@ -29,38 +25,44 @@ async function generarMenuSemanal() {
 
   await Promise.all(
     recetas.map(async (r) => {
-      obtenerImagenReceta(r.url);
+      r.foto = await obtenerImagenReceta(r.url);
     }),
   );
 
   const ingredientes = obtenerIngredientes(recetas);
+
   mostrarMenu(recetas);
   mostrarListaCompra(ingredientes);
 
   await supabaseClient.from("menus").insert({
     menu: recetas,
   });
+  return recetas;
 }
-
+window.generarMenuSemanal = generarMenuSemanal;
 document.addEventListener("DOMContentLoaded", async () => {
   document
     .getElementById("generarMenu")
     .addEventListener("click", generarMenuSemanal);
-
-  const { data } = await supabase
+  console.log("INICIO APP");
+  const { data } = await supabaseClient
     .from("menus")
     .select("*")
     .order("created_at", { ascending: false })
     .limit(1);
 
+  console.log("SUPABASE DATA:", data);
+
   if (data?.length) {
+    console.log("MENU QUE SE PINTA:", data[0]?.menu);
+
     mostrarMenu(data[0].menu);
 
     const ingredientes = obtenerIngredientes(data[0].menu);
     mostrarListaCompra(ingredientes);
-    await supabase.from("menus").insert({
-      menu: recetas,
-    });
+  } else {
+    console.log("NO HAY MENU → GENERANDO");
+    await generarMenuSemanal();
   }
 });
 
@@ -96,7 +98,9 @@ function mostrarMenu(recetas) {
   filaComida.className = "grid grid-cols-7 gap-4 mb-4";
 
   filaComida.innerHTML = `
-    <div class="text-zinc-400 flex items-center">Comida</div>
+    <div class="text-xs text-zinc-500 flex items-center justify-center">
+      🍽
+    </div>
     ${dias.map((_, i) => `<div class="dia" id="dia-${i}-comida"></div>`).join("")}
   `;
 
@@ -107,7 +111,9 @@ function mostrarMenu(recetas) {
   filaCena.className = "grid grid-cols-7 gap-4";
 
   filaCena.innerHTML = `
-    <div class="text-zinc-400 flex items-center">Cena</div>
+    <div class="text-xs text-zinc-500 flex items-center justify-center">
+      🌙
+    </div>
     ${dias.map((_, i) => `<div class="dia" id="dia-${i}-cena"></div>`).join("")}
   `;
 
@@ -151,43 +157,39 @@ function mostrarMenu(recetas) {
     card.classList.add("card");
 
     card.dataset.id = r.id;
-    const usadas = Array.from(document.querySelectorAll(".card")).map(
-      (c) => c.dataset.id,
-    );
+
     card.dataset.protein = tipoProteina(r);
     card.dataset.name = r.name;
 
     card.className =
-      "bg-zinc-900 rounded-xl overflow-hidden shadow hover:scale-105 transition-all cursor-pointer";
+      "bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden hover:border-emerald-500/40 transition-all";
 
     card.onclick = () => {
       window.open(r.url, "_blank");
     };
 
     card.innerHTML = `
-      <div class="drag-handle relative h-32 cursor-grab">
+      <div class="drag-handle h-32 overflow-hidden relative">
 
-      <img src="${foto || "https://picsum.photos/seed/food/600/400"}"
-           class="w-full h-full object-cover">
+        <img src="${foto || "https://picsum.photos/seed/food/600/400"}"
+             class="w-full h-full object-cover">
 
-        <button class="bloquear absolute top-2 right-2 bg-black/50 rounded px-2 py-1 text-sm z-10">
-        🔓
-        </button>
-
-        <button class="regen absolute top-2 left-2 bg-black/50 rounded px-2 py-1 text-sm z-10">
-          ♻
-        </button>
-
-        <div class="absolute inset-0 bg-black/40"></div>
-
-        <div class="titulo absolute bottom-2 left-3 right-3 text-sm font-semibold text-white line-clamp-2">
-          ${icono} ${nombre}
+        <div class="absolute top-2 right-2 flex gap-1">
+          <!-- aquí irán botones luego -->
         </div>
 
       </div>
 
-      <div class="p-2 text-xs text-zinc-400 text-center">
-        ${momento} · ${tiempo} min
+      <div class="p-3 space-y-1">
+
+        <div class="text-sm font-semibold text-zinc-200 leading-snug">
+          ${icono} ${nombre}
+        </div>
+
+        <div class="text-xs text-zinc-500">
+          ${momento} · ${tiempo} min
+        </div>
+
       </div>
     `;
     const bloquearBtn = card.querySelector(".bloquear");
@@ -200,13 +202,11 @@ function mostrarMenu(recetas) {
         const locked = card.dataset.locked === "true";
 
         if (locked) {
-          // desbloquear
           card.dataset.locked = "false";
           card.style.outline = "none";
           card.style.opacity = "1";
           bloquearBtn.textContent = "🔓";
         } else {
-          // bloquear
           card.dataset.locked = "true";
           card.style.outline = "2px solid #14b8a6";
           card.style.opacity = "0.8";
@@ -221,7 +221,6 @@ function mostrarMenu(recetas) {
 
         if (card.dataset.locked === "true") return;
 
-        // recetas ya usadas en el menú
         const usadas = Array.from(document.querySelectorAll(".card")).map(
           (c) => c.dataset.id,
         );
@@ -243,9 +242,7 @@ function mostrarMenu(recetas) {
         card.querySelector(".titulo").textContent = nueva.name;
         card.dataset.id = nueva.id;
 
-        card.onclick = () => {
-          window.open(nueva.url, "_blank");
-        };
+        card.onclick = () => window.open(nueva.url, "_blank");
       };
     }
 

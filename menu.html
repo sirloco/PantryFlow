@@ -8,19 +8,73 @@
 
         <!-- SUPABASE LIBRERÍA -->
         <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-        <script src="/config/supabase.js"></script>
     </head>
 
     <body class="bg-zinc-950 text-zinc-200 p-8">
-        <h1 class="text-xl mb-6 text-emerald-400">Generar menú semanal</h1>
-
-        <button
-            id="generarMenu"
-            class="bg-emerald-500 px-6 py-3 rounded text-black font-semibold"
+        <header
+            class="bg-gradient-to-r from-zinc-900 to-zinc-800 border-b border-emerald-500/20 px-8 py-4 mb-8"
         >
-            Generar menú
-        </button>
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1
+                        class="text-emerald-400 text-lg tracking-widest font-semibold"
+                    >
+                        PANTRYFLOW
+                    </h1>
+                    <p class="text-xs text-zinc-400">
+                        Planificador inteligente de menús
+                    </p>
+                </div>
 
+                <nav class="flex gap-6 text-sm">
+                    <a
+                        href="/index.html"
+                        class="text-zinc-400 hover:text-emerald-400"
+                    >
+                        Gestionar productos
+                    </a>
+                    <a href="/menu.html" class="text-emerald-400 font-semibold">
+                        Gestionar menús
+                    </a>
+                </nav>
+            </div>
+        </header>
+        <div class="flex gap-3 mb-6">
+            <button
+                id="loadMenu"
+                class="px-4 py-2 bg-zinc-800 rounded hover:bg-zinc-700"
+            >
+                Cargar menú actual
+            </button>
+
+            <button
+                id="loadHistory"
+                class="px-4 py-2 bg-zinc-800 rounded hover:bg-zinc-700"
+            >
+                Menús anteriores
+            </button>
+
+            <button
+                id="generarMenu"
+                class="px-4 py-2 bg-emerald-500 text-black rounded font-semibold"
+            >
+                Generar nuevo menú
+            </button>
+
+            <button
+                id="saveMenu"
+                class="px-4 py-2 bg-zinc-800 rounded hover:bg-zinc-700"
+            >
+                Guardar menú
+            </button>
+
+            <button
+                id="shoppingList"
+                class="px-4 py-2 bg-zinc-800 rounded hover:bg-zinc-700"
+            >
+                Lista de compra
+            </button>
+        </div>
         <h2 class="mt-8 mb-4 text-emerald-400">Recetas elegidas</h2>
         <div id="menu-container" class="space-y-6"></div>
 
