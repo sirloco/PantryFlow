@@ -1,8 +1,19 @@
 const mapaProteinas = {
   pollo: ["pollo"],
-  cerdo: ["cerdo", "chorizo", "jamon", "jamón"],
+  cerdo: ["cerdo", "chorizo", "jamon", "jamón", "lomo", "panceta"],
   ternera: ["ternera", "vacuno"],
-  pescado: ["salmón", "atun", "atún", "merluza", "bacalao", "pescado"],
+  pescado: [
+    "salmón",
+    "atun",
+    "atún",
+    "merluza",
+    "bacalao",
+    "langostino",
+    "langostinos",
+    "gamba",
+    "gambas",
+    "pescado",
+  ],
   huevos: ["huevo"],
   vegetal: [
     "tofu",
@@ -35,7 +46,6 @@ export function equilibrarProteinas(recetas) {
 
   for (const r of recetas) {
     const tipo = tipoProteina(r);
-
     if (!categoriaPermitida(r, menu)) continue;
 
     if (objetivo[tipo] && conteo[tipo] < objetivo[tipo]) {
@@ -62,23 +72,24 @@ export function equilibrarProteinas(recetas) {
 }
 
 export function categoriaPermitida(receta, menu) {
-  const categoria = tipoCategoria(receta);
+  const tipo = tipoCategoria(receta);
 
-  const limite = 2;
+  const conteo = menu.filter((r) => tipoCategoria(r) === tipo).length;
 
-  const count = menu.filter((r) => tipoCategoria(r) === categoria).length;
+  if (tipo === "pasta" && conteo >= 3) return false;
+  if (tipo === "arroz" && conteo >= 3) return false;
+  if (tipo === "sopa" && conteo >= 1) return false;
 
-  return count < limite;
+  return true;
 }
 
 const mapaCategorias = {
-  pasta: ["pasta", "espagueti", "espaguetis", "macarrones", "fettuccine"],
-  arroz: ["arroz", "risotto"],
+  pasta: ["espagueti", "espaguetis", "pasta", "tagliatelle", "penne"],
+  arroz: ["arroz", "risotto", "chaufa", "paella"],
   sopa: ["sopa", "crema", "caldo"],
+  tacos: ["taco", "tacos", "wrap", "burrito"],
   ensalada: ["ensalada"],
-  tacos: ["taco", "tortilla", "wrap"],
   curry: ["curry"],
-  bowl: ["bowl"],
 };
 export function tipoCategoria(receta) {
   const nombre = (receta.name || "").toLowerCase();
@@ -142,17 +153,31 @@ export function filtrarDuplicadas(recetas) {
 export function tipoProteina(receta) {
   const ingredientes = receta.ingredients ||
     receta.data?.ingredients || [{ name: receta.name }];
+
   const nombres = ingredientes.map((i) => (i.name || "").toLowerCase());
-  for (const tipo in mapaProteinas) {
+
+  const prioridad = [
+    "pescado",
+    "pollo",
+    "cerdo",
+    "ternera",
+    "huevos",
+    "vegetal",
+  ];
+
+  for (const tipo of prioridad) {
     const palabras = mapaProteinas[tipo];
+
     const encontrado = nombres.some((ingrediente) =>
       palabras.some((p) => ingrediente.includes(p)),
     );
+
     if (encontrado) {
       if (tipo === "vegetal") return "vegetariano";
       return tipo;
     }
   }
+
   return "vegetariano";
 }
 
