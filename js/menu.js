@@ -17,8 +17,6 @@ async function generarMenuSemanal() {
 
   recetas = shuffle(recetas);
 
-  recetas = shuffle(recetas);
-
   poolRecetas = recetas;
 
   recetas = equilibrarProteinas(recetas);
