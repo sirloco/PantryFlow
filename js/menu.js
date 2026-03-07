@@ -10,15 +10,10 @@ let poolRecetas = [];
 
 async function generarMenuSemanal() {
   let recetas = await obtenerRecetas(150);
-
   recetas = recetas.filter((r) => (r.prep_time || 0) <= 30);
-
   recetas = filtrarDuplicadas(recetas);
-
   recetas = shuffle(recetas);
-
   poolRecetas = recetas;
-
   recetas = equilibrarProteinas(recetas);
 
   await Promise.all(
@@ -32,9 +27,43 @@ async function generarMenuSemanal() {
   mostrarMenu(recetas);
   mostrarListaCompra(ingredientes);
 
-  await supabaseClient.from("menus").insert({
-    menu: recetas,
+  const { data: menuCreado, error: errorMenu } = await supabaseClient
+    .from("menus")
+    .insert({
+      nombre: "Semana " + new Date().toLocaleDateString(),
+      estado: "activo",
+    })
+    .select()
+    .single();
+
+  if (errorMenu) {
+    console.error("ERROR creando menu:", errorMenu);
+  }
+
+  const menuId = menuCreado.id;
+
+  const filas = recetas.map((r, i) => {
+    const dia = Math.floor(i / 2);
+    const momento = i % 2 === 0 ? "comida" : "cena";
+
+    return {
+      menu_id: menuId,
+      hf_recipe_id: r.id,
+      nombre: r.name,
+      dia,
+      momento,
+    };
   });
+
+  const { data: filasInsertadas, error } = await supabaseClient
+    .from("menu_recetas")
+    .insert(filas)
+    .select();
+
+  filasInsertadas.forEach((f, i) => {
+    recetas[i].menu_receta_id = f.id;
+  });
+
   return recetas;
 }
 window.generarMenuSemanal = generarMenuSemanal;
@@ -49,10 +78,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     .limit(1);
 
   if (data?.length) {
-    mostrarMenu(data[0].menu);
+    const menuId = data[0].id;
 
-    const ingredientes = obtenerIngredientes(data[0].menu);
-    mostrarListaCompra(ingredientes);
+    const { data: recetasMenu } = await supabaseClient
+      .from("menu_recetas")
+      .select("*")
+      .eq("menu_id", menuId)
+      .order("dia");
+
+    const recetas = recetasMenu.map((r) => ({
+      id: r.hf_recipe_id,
+      hf_recipe_id: r.hf_recipe_id,
+      name: r.nombre,
+      url: "",
+      prep_time: "?",
+      ingredients: [],
+      menu_receta_id: r.id,
+    }));
+
+    mostrarMenu(recetas);
   } else {
     await generarMenuSemanal();
   }
@@ -157,20 +201,20 @@ function mostrarMenu(recetas) {
     const card = document.createElement("div");
 
     card.classList.add("card");
-
-    card.dataset.id = r.id;
+    card.dataset.id = r.hf_recipe_id || r.id;
+    card.dataset.menuRecetaId = r.menu_receta_id || "";
 
     card.dataset.protein = tipoProteina(r);
     card.dataset.name = r.name;
 
     card.className =
-      "card bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden transition-all hover:shadow-lg hover:border-emerald-500/40 hover:-translate-y-1 hover:scale-[1.02]";
+      "card bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden h-[230px] flex flex-col transition-all hover:shadow-lg hover:border-emerald-500/40 hover:-translate-y-1 hover:scale-[1.02] select-none";
     card.onclick = () => {
       window.open(r.url, "_blank");
     };
 
     card.innerHTML = `
-      <div class="relative drag-handle h-36 overflow-hidden cursor-grab active:cursor-grabbing select-none">
+      <div class="relative drag-handle h-40 overflow-hidden cursor-grab active:cursor-grabbing select-none">
 
         <img src="${foto || "https://picsum.photos/seed/food/600/400"}"
              class="w-full h-full object-cover">
@@ -190,21 +234,28 @@ function mostrarMenu(recetas) {
         <div class="absolute top-2 right-2 flex gap-2">
 
           <button
-            class="bloquear bg-zinc-900 border border-zinc-7000 backdrop-blur rounded-full w-8 h-8 text-sm
-            flex items-center justify-center  hover:bg-black/70 transition">
+            class="cocinar bg-zinc-900 border border-zinc-700 backdrop-blur rounded-full w-8 h-8 text-sm
+            flex items-center justify-center hover:bg-black/70 transition">
+            ✔
+          </button>
+
+          <button
+            class="bloquear bg-zinc-900 border border-zinc-700 backdrop-blur rounded-full w-8 h-8 text-sm
+            flex items-center justify-center hover:bg-black/70 transition">
             🔒
           </button>
 
           <button
             class="regen bg-zinc-900 border border-zinc-700 backdrop-blur rounded-full w-8 h-8 text-sm
-            flex items-center justify-center  hover:bg-black/70 transition">
+            flex items-center justify-center hover:bg-black/70 transition">
             ♻
           </button>
+
         </div>
       </div>
-      <div class="p-3">
+      <div class="p-3 h-20 flex flex-col justify-between">
 
-        <div class="text-sm font-semibold text-zinc-200 leading-tight">
+      <div class="text-sm font-semibold text-zinc-200 leading-tight clamp-2">
           ${nombre}
         </div>
 
@@ -216,6 +267,7 @@ function mostrarMenu(recetas) {
     `;
     const bloquearBtn = card.querySelector(".bloquear");
     const regenBtn = card.querySelector(".regen");
+    const cocinarBtn = card.querySelector(".cocinar");
 
     if (bloquearBtn) {
       bloquearBtn.onclick = (e) => {
@@ -265,6 +317,31 @@ function mostrarMenu(recetas) {
         card.onclick = () => window.open(nueva.url, "_blank");
       };
     }
+    if (cocinarBtn) {
+      cocinarBtn.onclick = async (e) => {
+        e.stopPropagation();
+        console.log("dataset:", card.dataset);
+        // 🚫 evitar cocinar dos veces
+        if (card.dataset.cooked === "true") return;
+
+        const hfId = Number(card.dataset.id);
+        const menuRecetaId = card.dataset.menuRecetaId;
+
+        try {
+          await cocinarReceta(hfId, menuRecetaId);
+
+          // marcar como cocinada
+          card.dataset.cooked = "true";
+
+          card.style.opacity = "0.5";
+          cocinarBtn.textContent = "✓";
+          card.classList.add("grayscale");
+        } catch (err) {
+          console.error(err);
+          alert("Error cocinando receta");
+        }
+      };
+    }
 
     const contenedor = document.getElementById(
       `dia-${diaIndex}-${momento.toLowerCase()}`,
@@ -284,4 +361,85 @@ function mostrarListaCompra(lista) {
     ul.appendChild(li);
   });
   cont.appendChild(ul);
+}
+
+async function cocinarReceta(hfRecipeId, menuRecetaId) {
+  if (!hfRecipeId) {
+    console.error("hfRecipeId undefined");
+    return;
+  }
+  // 1. obtener receta completa HF
+  const receta = await obtenerRecetaCompleta(hfRecipeId);
+
+  if (!receta) {
+    console.error("No se pudo cargar la receta HF");
+    return;
+  }
+
+  const ingredientes = receta.ingredients || [];
+
+  const ignorar = [
+    "sal",
+    "pimienta",
+    "sal y pimienta",
+    "pimienta negra",
+    "aceite de oliva",
+    "aceite",
+    "aceite vegetal",
+    "aceite para cocinar",
+  ];
+
+  let agua = 0;
+
+  for (const ing of ingredientes) {
+    const nombre = ing.name.toLowerCase().trim();
+
+    if (nombre.includes("agua")) {
+      agua += ing.amount || 0;
+    }
+  }
+
+  for (const ing of ingredientes) {
+    const nombre = ing.name.toLowerCase().trim();
+
+    // ignorar agua
+    if (nombre.includes("agua")) {
+      continue;
+    }
+
+    // ignorar básicos
+    if (ignorar.includes(nombre)) {
+      continue;
+    }
+
+    let cantidad = ing.amount || 1;
+
+    // transformar caldo
+    if (nombre.includes("caldo") && agua > 0) {
+      cantidad = agua;
+    }
+
+    const { data: eq } = await supabaseClient
+      .from("equivalencias")
+      .select("producto_id")
+      .ilike("hf_nombre", nombre)
+      .maybeSingle();
+
+    if (!eq) {
+      console.warn("No hay equivalencia para:", nombre);
+      continue;
+    }
+
+    await supabaseClient.from("movimientos").insert({
+      producto_id: eq.producto_id,
+      cantidad: cantidad,
+      tipo: "salida",
+    });
+  }
+
+  // marcar receta cocinada
+  await supabaseClient
+    .from("menu_recetas")
+    .update({ cocinada: true })
+    .eq("id", menuRecetaId);
 }

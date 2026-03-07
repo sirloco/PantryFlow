@@ -84,10 +84,20 @@ export function categoriaPermitida(receta, menu) {
 }
 
 const mapaCategorias = {
-  pasta: ["espagueti", "espaguetis", "pasta", "tagliatelle", "penne"],
+  pasta: [
+    "espagueti",
+    "espaguetis",
+    "pasta",
+    "tagliatelle",
+    "penne",
+    "orzo",
+    "orzotto",
+    "rigatoni",
+    "yakisoba",
+  ],
   arroz: ["arroz", "risotto", "chaufa", "paella"],
   sopa: ["sopa", "crema", "caldo"],
-  tacos: ["taco", "tacos", "wrap", "burrito"],
+  tacos: ["taco", "tacos", "wrap", "burrito", "tostadas"],
   ensalada: ["ensalada"],
   curry: ["curry"],
 };
@@ -138,14 +148,14 @@ export function nombreBase(receta) {
 }
 
 export function filtrarDuplicadas(recetas) {
-  const vistas = new Set();
+  const vistos = new Set();
 
   return recetas.filter((r) => {
-    const base = nombreBase(r);
-    console.log("BASE RECETA:", nombreBase(r), r.name);
-    if (vistas.has(base)) return false;
+    const nombre = normalizarNombre(r.name);
 
-    vistas.add(base);
+    if (vistos.has(nombre)) return false;
+
+    vistos.add(nombre);
 
     return true;
   });
@@ -183,4 +193,13 @@ export function tipoProteina(receta) {
 
 export function shuffle(array) {
   return array.sort(() => Math.random() - 0.5);
+}
+
+export function normalizarNombre(nombre) {
+  return nombre
+    .toLowerCase()
+    .replace("extra de ", "")
+    .replace("extra ", "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
