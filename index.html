@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <title>PantryFlow</title>
+        <link rel="icon" href="/favicon.ico" />
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
             @keyframes fadeInSoft {
@@ -23,10 +24,7 @@
             }
         </style>
     </head>
-    <body
-        class="bg-zinc-950 text-zinc-200 fade-in"
-        style="opacity: 0"
-    >
+    <body class="bg-zinc-950 text-zinc-200 fade-in" style="opacity: 0">
         <!-- CABECERA FULL WIDTH -->
         <header
             class="w-full bg-gradient-to-r from-emerald-900/40 via-zinc-900 to-emerald-900/40 backdrop-blur-xl shadow-[0_0_100px_rgba(16,185,129,0.2)]"
@@ -73,14 +71,13 @@
         </header>
 
         <!-- CONTENIDO -->
-        <h2 class="mb-6 text-emerald-400 tracking-widest text-sm uppercase">Stock actual</h2>
+        <h2 class="mb-6 text-emerald-400 tracking-widest text-sm uppercase">
+            Stock actual
+        </h2>
 
         <!-- CONTENEDOR STOCK -->
         <div class="space-y-6 m-10">
-          <div
-            id="stock-container"
-            class="grid grid-cols-8 gap-4 mb-4">
-          </div>
+            <div id="stock-container" class="grid grid-cols-8 gap-4 mb-4"></div>
         </div>
 
         <!-- MODAL MOVIMIENTO -->
