@@ -2,16 +2,22 @@ export default async function handler(req, res) {
   const { url } = req.query;
 
   if (!url) {
-    res.status(400).send("Missing url");
-    return;
+    return res.status(400).send("Missing url");
   }
 
   try {
-    const r = await fetch(url);
-    const text = await r.text();
+    const response = await fetch(url);
 
+    if (!response.ok) {
+      return res.status(response.status).send("Upstream error");
+    }
+
+    const text = await response.text();
+
+    res.setHeader("Content-Type", "text/html");
     res.status(200).send(text);
-  } catch (e) {
-    res.status(500).send("Proxy error");
+  } catch (err) {
+    console.error("Proxy error:", err);
+    res.status(500).send("Proxy failed");
   }
 }

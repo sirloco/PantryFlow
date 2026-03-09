@@ -1,0 +1,6 @@
+{
+  "routes": [
+    { "src": "^/menu$", "dest": "/menu.html" },
+    { "src": "^/productos$", "dest": "/productos.html" }
+  ]
+}
