@@ -37,14 +37,53 @@ export async function obtenerRecetas(numero = 10) {
 export async function obtenerRecetaCompleta(id) {
   const url =
     "https://corsproxy.io/?https://api.hfresh.info/es-ES/recipes/" + id;
+
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${HFRESH_TOKEN}`,
       Accept: "application/json",
     },
   });
+
   const data = await res.json();
-  return data.data;
+  const receta = data.data;
+
+  const ingredientes = await obtenerIngredientesConCantidad(receta.url);
+
+  receta.ingredients = ingredientes;
+
+  return receta;
+}
+
+export async function obtenerIngredientesConCantidad(url) {
+  const res = await fetch("https://corsproxy.io/?" + url);
+  const html = await res.text();
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+
+  const texto = doc.body.innerText;
+
+  const regex =
+    /([A-Za-zÁÉÍÓÚáéíóúñÑ\s]+)\n\s*([\d.]+)\s*(gramo|mililitro|unidad|cucharada|cucharadita|paquete)/gi;
+
+  const ingredientes = [];
+  let match;
+
+  while ((match = regex.exec(texto)) !== null) {
+    let unit = match[3]
+      .replace("gramo", "g")
+      .replace("mililitro", "ml")
+      .replace("unidad", "unidad");
+
+    ingredientes.push({
+      name: match[1].trim().toLowerCase(),
+      amount: parseFloat(match[2]),
+      unit: unit,
+    });
+  }
+
+  return ingredientes;
 }
 
 export async function obtenerImagenReceta(url) {
