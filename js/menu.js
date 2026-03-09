@@ -385,7 +385,7 @@ document.getElementById("saveMenu").onclick = async (e) => {
   }, 2000);
 };
 
-function actualizarEstadoMenu() {
+export function actualizarEstadoMenu() {
   const cards = document.querySelectorAll(".card");
 
   cards.forEach((card) => {

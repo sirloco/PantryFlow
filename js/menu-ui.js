@@ -1,5 +1,6 @@
 import { activarEventos } from "./menu-actions.js";
 import { tipoProteina, tipoCategoria } from "./menu-engine.js";
+import { actualizarEstadoMenu } from "./menu.js";
 
 export function mostrarMenu(recetas, menuActual, poolRecetas) {
   const iconos = {
