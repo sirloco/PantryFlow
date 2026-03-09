@@ -26,12 +26,18 @@ export async function obtenerRecetas(numero = 10) {
     encodeURIComponent(
       "https://api.hfresh.info/es-ES/recipes?per_page=" + numero,
     );
-  const res = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${HFRESH_TOKEN}`,
-      Accept: "application/json",
+  const res = await fetch(
+    "/api/proxy?url=" +
+      encodeURIComponent(
+        "https://api.hfresh.info/es-ES/recipes?per_page=" + numero,
+      ),
+    {
+      headers: {
+        Authorization: `Bearer ${HFRESH_TOKEN}`,
+        Accept: "application/json",
+      },
     },
-  });
+  );
   const data = await res.json();
   return data.data;
 }
@@ -41,12 +47,16 @@ export async function obtenerRecetaCompleta(id) {
     "/api/proxy?url=" +
     encodeURIComponent("https://api.hfresh.info/es-ES/recipes/" + id);
 
-  const res = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${HFRESH_TOKEN}`,
-      Accept: "application/json",
+  const res = await fetch(
+    "/api/proxy?url=" +
+      encodeURIComponent("https://api.hfresh.info/es-ES/recipes/" + id),
+    {
+      headers: {
+        Authorization: `Bearer ${HFRESH_TOKEN}`,
+        Accept: "application/json",
+      },
     },
-  });
+  );
 
   const data = await res.json();
   const receta = data.data;
