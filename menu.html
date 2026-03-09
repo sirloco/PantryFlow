@@ -74,7 +74,39 @@
             </button>
         </div>
         <div id="menu-container" class="space-y-6"></div>
+        <div class="mt-10 max-w-3xl">
+            <h2 class="text-sm tracking-widest text-zinc-400 mb-3">
+                LISTA DE COMPRA
+            </h2>
 
+            <div class="flex gap-3 mb-3">
+                <button
+                    id="generarLista"
+                    class="px-4 py-2 bg-zinc-800 rounded hover:bg-zinc-700"
+                >
+                    Generar
+                </button>
+
+                <button
+                    id="copiarLista"
+                    class="px-4 py-2 bg-zinc-800 rounded hover:bg-zinc-700"
+                >
+                    Copiar
+                </button>
+            </div>
+            <button
+                id="abrirEroski"
+                class="px-4 py-2 bg-zinc-800 rounded hover:bg-zinc-700"
+            >
+                Buscar en Eroski
+            </button>
+            <textarea
+                id="listaCompra"
+                class="w-full h-40 p-3 bg-zinc-900 border border-zinc-700 rounded text-sm text-zinc-200 font-mono"
+                placeholder="Aquí aparecerá la lista..."
+            >
+            </textarea>
+        </div>
         <div
             id="modalReceta"
             class="hidden fixed inset-0 bg-black/70 flex items-center justify-center"
