@@ -88,10 +88,9 @@ export async function obtenerIngredientesConCantidad(url) {
 
 export async function obtenerImagenReceta(url) {
   try {
-    const res = await fetch("https://corsproxy.io/?" + url);
+    const res = await fetch("/api/proxy?url=" + encodeURIComponent(url));
     const html = await res.text();
 
-    // buscar imagen HelloFresh limpia
     const match = html.match(
       /https:\/\/img\.hellofresh\.com[^"]+Main_high[^"]+\.jpg/,
     );
