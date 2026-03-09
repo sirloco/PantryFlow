@@ -191,7 +191,7 @@ function mostrarListaCompra(lista) {
   textarea.value = lineas.join("\n");
 }
 
-async function cocinarReceta(hfRecipeId, menuRecetaId) {
+export async function cocinarReceta(hfRecipeId, menuRecetaId) {
   if (!hfRecipeId) {
     console.error("hfRecipeId undefined");
     return;
@@ -472,7 +472,7 @@ document.getElementById("cancelarReceta").onclick = () => {
   document.getElementById("modalReceta").classList.add("hidden");
 };
 
-function toast(msg) {
+export function toast(msg) {
   const t = document.getElementById("toast");
 
   t.innerText = msg;

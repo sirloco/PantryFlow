@@ -1,3 +1,6 @@
+import { toast } from "./menu.js";
+import { cocinarReceta } from "./menu.js";
+
 export function activarEventos(card, menuActual, poolRecetas) {
   const bloquearBtn = card.querySelector(".bloquear");
   const regenBtn = card.querySelector(".regen");
