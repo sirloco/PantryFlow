@@ -13,6 +13,10 @@ let menuActual = {
 };
 let colaEquivalencias = [];
 let modalAbierto = false;
+function ocultarLoader() {
+  const loader = document.getElementById("loader");
+  if (loader) loader.style.display = "none";
+}
 
 async function generarMenuSemanal() {
   let recetas = await obtenerRecetas(150);
@@ -80,6 +84,7 @@ async function generarMenuSemanal() {
 }
 window.generarMenuSemanal = generarMenuSemanal;
 document.addEventListener("DOMContentLoaded", async () => {
+  generarSelectorReemplazo();
   document
     .getElementById("generarMenu")
     .addEventListener("click", generarMenuSemanal);
@@ -97,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       .select("*")
       .eq("menu_id", menuId)
       .order("dia", { ascending: true })
-      .order("momento", { ascending: true });
+      .order("momento", { ascending: false });
 
     const recetas = await Promise.all(
       recetasMenu.map(async (r) => {
@@ -127,7 +132,29 @@ document.addEventListener("DOMContentLoaded", async () => {
   } else {
     await generarMenuSemanal();
   }
+  ocultarLoader();
 });
+function generarSelectorReemplazo() {
+  const dias = ["Sábado", "Domingo", "Lunes", "Martes", "Miércoles", "Jueves"];
+
+  const select = document.getElementById("recetaReemplazar");
+
+  select.innerHTML = "";
+
+  let index = 0;
+
+  dias.forEach((dia) => {
+    const comida = document.createElement("option");
+    comida.value = index++;
+    comida.textContent = `${dia} comida`;
+    select.appendChild(comida);
+
+    const cena = document.createElement("option");
+    cena.value = index++;
+    cena.textContent = `${dia} cena`;
+    select.appendChild(cena);
+  });
+}
 
 function mostrarMenu(recetas) {
   const iconos = {
@@ -352,6 +379,11 @@ function mostrarMenu(recetas) {
         const disponibles = poolRecetas.filter(
           (r) => tipoProteina(r) === protein && !usadas.includes(String(r.id)),
         );
+
+        if (!disponibles.length) {
+          toast("No hay más recetas de ese tipo");
+          return;
+        }
 
         const nueva =
           disponibles[Math.floor(Math.random() * disponibles.length)];
@@ -693,7 +725,7 @@ document.getElementById("ignorarEquivalencia").onclick = () => {
   procesarColaEquivalencias();
 };
 
-document.getElementById("addRecipe").onclick = () => {
+document.getElementById("replaceRecipe").onclick = () => {
   document.getElementById("modalReceta").classList.remove("hidden");
 };
 
@@ -713,36 +745,24 @@ function toast(msg) {
 }
 document.getElementById("guardarReceta").onclick = async () => {
   const id = document.getElementById("hfId").value;
-  if (menuActual.recetas.some((r) => r.hf_recipe_id == id)) {
-    toast("La receta ya está en el menú");
-    return;
-  }
-  const dia = Number(document.getElementById("diaReceta").value);
-  const momento = document.getElementById("momentoReceta").value;
+
+  const posicion = Number(document.getElementById("recetaReemplazar").value);
+
+  const dia = menuActual.recetas[posicion].dia;
+  const momento = menuActual.recetas[posicion].momento;
 
   const receta = await obtenerRecetaCompleta(id);
 
-  const menuId = menuActual.id;
-
-  if (!menuId) {
-    toast("No hay menú cargado");
-    return;
-  }
-
-  const { data: fila } = await supabaseClient
+  await supabaseClient
     .from("menu_recetas")
-    .insert({
-      menu_id: menuActual.id,
+    .update({
       hf_recipe_id: id,
       nombre: receta.name,
-      dia,
-      momento,
     })
-    .select()
-    .maybeSingle();
+    .eq("id", menuActual.recetas[posicion].menu_receta_id);
 
-  // añadir al estado global
-  menuActual.recetas.push({
+  menuActual.recetas[posicion] = {
+    ...menuActual.recetas[posicion],
     id,
     hf_recipe_id: id,
     name: receta.name,
@@ -750,14 +770,13 @@ document.getElementById("guardarReceta").onclick = async () => {
     prep_time: receta.prep_time || "?",
     ingredients: receta.ingredients,
     foto: await obtenerImagenReceta(receta.url),
-    menu_receta_id: fila.id,
-    dia,
-    momento,
-  });
+  };
 
   mostrarMenu(menuActual.recetas);
+
   document.getElementById("modalReceta").classList.add("hidden");
-  toast("Receta añadida");
+
+  toast("Receta reemplazada");
 
   document.getElementById("hfId").value = "";
 };

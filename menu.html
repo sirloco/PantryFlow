@@ -49,7 +49,7 @@
 
             <button
                 id="generarMenu"
-                class="px-4 py-2 bg-emerald-500 text-black rounded font-semibold"
+                class="px-4 py-2 bg-zinc-800 rounded hover:bg-zinc-700"
             >
                 Generar nuevo menú
             </button>
@@ -61,10 +61,10 @@
                 Guardar menú
             </button>
             <button
-                id="addRecipe"
+                id="replaceRecipe"
                 class="px-4 py-2 bg-zinc-800 rounded hover:bg-zinc-700"
             >
-                Añadir receta
+                Reemplazar receta
             </button>
             <button
                 id="shoppingList"
@@ -80,7 +80,7 @@
             class="hidden fixed inset-0 bg-black/70 flex items-center justify-center"
         >
             <div class="bg-zinc-900 p-6 rounded-xl w-96 space-y-4">
-                <h3 class="text-lg font-semibold">Añadir receta HF</h3>
+                <h3 class="text-lg font-semibold">Reemplazar receta</h3>
 
                 <input
                     id="hfId"
@@ -88,22 +88,10 @@
                     class="w-full p-2 bg-zinc-800 rounded"
                 />
 
-                <select id="diaReceta" class="w-full p-2 bg-zinc-800 rounded">
-                    <option value="0">Sábado</option>
-                    <option value="1">Domingo</option>
-                    <option value="2">Lunes</option>
-                    <option value="3">Martes</option>
-                    <option value="4">Miércoles</option>
-                    <option value="5">Jueves</option>
-                </select>
-
                 <select
-                    id="momentoReceta"
-                    class="w-full p-2 bg-zinc-800 rounded"
-                >
-                    <option value="comida">Comida</option>
-                    <option value="cena">Cena</option>
-                </select>
+                    id="recetaReemplazar"
+                    class="w-full p-2 bg-zinc-900 text-zinc-200 border border-zinc-700 rounded focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                ></select>
 
                 <div class="flex gap-3">
                     <button
@@ -179,7 +167,20 @@
             id="toast"
             class="fixed bottom-6 right-6 bg-emerald-500 text-black px-4 py-2 rounded shadow-lg hidden"
         ></div>
+        <div
+            id="loader"
+            class="fixed inset-0 bg-zinc-950 flex items-center justify-center z-50"
+        >
+            <div class="flex flex-col items-center gap-4">
+                <div
+                    class="w-12 h-12 border-4 border-zinc-700 border-t-emerald-500 rounded-full animate-spin"
+                ></div>
 
+                <p class="text-zinc-400 text-sm tracking-widest">
+                    Cargando menú...
+                </p>
+            </div>
+        </div>
         <!-- CONFIG -->
         <script src="config/supabase.js"></script>
 
