@@ -22,8 +22,10 @@ export function normalizeRecipe(r) {
 
 export async function obtenerRecetas(numero = 10) {
   const url =
-    "https://corsproxy.io/?https://api.hfresh.info/es-ES/recipes?per_page=" +
-    numero;
+    "/api/proxy?url=" +
+    encodeURIComponent(
+      "https://api.hfresh.info/es-ES/recipes?per_page=" + numero,
+    );
   const res = await fetch(url, {
     headers: {
       Authorization: `Bearer ${HFRESH_TOKEN}`,
@@ -36,7 +38,8 @@ export async function obtenerRecetas(numero = 10) {
 
 export async function obtenerRecetaCompleta(id) {
   const url =
-    "https://corsproxy.io/?https://api.hfresh.info/es-ES/recipes/" + id;
+    "/api/proxy?url=" +
+    encodeURIComponent("https://api.hfresh.info/es-ES/recipes/" + id);
 
   const res = await fetch(url, {
     headers: {
@@ -56,7 +59,7 @@ export async function obtenerRecetaCompleta(id) {
 }
 
 export async function obtenerIngredientesConCantidad(url) {
-  const res = await fetch("https://corsproxy.io/?" + url);
+  const res = await fetch("/api/proxy?url=" + encodeURIComponent(url));
   const html = await res.text();
 
   const parser = new DOMParser();
